@@ -1,0 +1,54 @@
+COMMAND: slither AuditTarget.sol --config-file slither.config.json --fail-none --json evidence/before_configured/slither.json
+SLITHER_VERSION:
+0.11.6
+
+SOLC_VERSION:
+solc, the solidity compiler commandline interface
+Version: 0.8.24+commit.e11b9ed9.Linux.g++
+
+
+Detector: weak-prng
+TipJar_0534.displayDay() (AuditTarget.sol#63-65) uses a weak PRNG: "(block.timestamp / 86400 + 4) % 7 (AuditTarget.sol#64)" 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#weak-PRNG
+
+Detector: controlled-delegatecall
+TipJar_0534.plugin(address,bytes) (AuditTarget.sol#54-57) uses delegatecall to a input-controlled function id
+	- (ok,None) = target.delegatecall(data) (AuditTarget.sol#55)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#controlled-delegatecall
+
+Detector: reentrancy-eth
+Reentrancy in TipJar_0534.redeem() (AuditTarget.sol#46-52):
+	External calls:
+	- (ok,None) = msg.sender.call{value: amount}() (AuditTarget.sol#49)
+	State variables written after the call(s):
+	- ledger[msg.sender] = 0 (AuditTarget.sol#51)
+	TipJar_0534.ledger (AuditTarget.sol#12) can be used in cross function reentrancies:
+	- TipJar_0534.contribute() (AuditTarget.sol#25-28)
+	- TipJar_0534.ledger (AuditTarget.sol#12)
+	- TipJar_0534.redeem() (AuditTarget.sol#46-52)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-1
+
+Detector: incorrect-equality
+TipJar_0534.vaultDrained() (AuditTarget.sol#59-61) uses a dangerous strict equality:
+	- address(this).balance == 0 (AuditTarget.sol#60)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities
+
+Detector: tx-origin
+TipJar_0534.updateOwner(address) (AuditTarget.sol#35-39) uses tx.origin for authorization: require(bool,string)(tx.origin == owner,not owner) (AuditTarget.sol#36)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-usage-of-txorigin
+
+Detector: unchecked-lowlevel
+TipJar_0534.rescueEth(address) (AuditTarget.sol#41-44) ignores return value by to.call{value: address(this).balance}() (AuditTarget.sol#43)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unchecked-low-level-calls
+AuditTarget.sol analyzed (2 contracts with 64 detectors), 6 result(s) found
+Multiple frameworks detected: solc, Solc-json. Using solc (highest priority). Use --compile-force-framework to override.
+'solc --version' running
+'solc AuditTarget.sol --combined-json abi,ast,bin,bin-runtime,srcmap,srcmap-runtime,userdoc,devdoc,hashes --allow-paths .,/root/Lab06_25520534_baseline/Lab06_SinhVien' running
+Compilation warnings/errors on AuditTarget.sol:
+Warning: Return value of low-level calls not used.
+  --> AuditTarget.sol:43:9:
+   |
+43 |         to.call{value: address(this).balance}("");
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
