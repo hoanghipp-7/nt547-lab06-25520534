@@ -9,6 +9,7 @@ interface IERC20Like {
 
 contract TipJar_0534 {
     address public owner;
+    address public immutable module; // module tin cay co dinh luc deploy
     mapping(address => uint256) public ledger;
 
     event Deposited(address indexed who, uint256 amount);
@@ -18,8 +19,10 @@ contract TipJar_0534 {
         _;
     }
 
-    constructor() {
+    constructor(address trustedModule) {
+        require(trustedModule != address(0), "zero");
         owner = msg.sender;
+        module = trustedModule;
     }
 
     function contribute() external payable {
@@ -32,35 +35,37 @@ contract TipJar_0534 {
         require(ok, "withdraw failed");
     }
 
-    function updateOwner(address newOwner) external {
-        require(tx.origin == owner, "not owner");
+    function updateOwner(address newOwner) external onlyOwner {
         require(newOwner != address(0), "zero");
         owner = newOwner;
     }
 
     function rescueEth(address payable to) external onlyOwner {
         require(to != address(0), "zero");
-        to.call{value: address(this).balance}("");
+        (bool ok, ) = to.call{value: address(this).balance}("");
+        require(ok, "rescue failed");
     }
 
     function redeem() external {
         uint256 amount = ledger[msg.sender];
         require(amount > 0, "empty");
+        ledger[msg.sender] = 0; // Effects truoc Interactions (CEI)
         (bool ok, ) = msg.sender.call{value: amount}("");
         require(ok, "send failed");
-        ledger[msg.sender] = 0;
     }
 
-    function plugin(address target, bytes calldata data) external {
-        (bool ok, ) = target.delegatecall(data);
+    function plugin(bytes calldata data) external onlyOwner {
+        (bool ok, ) = module.delegatecall(data);
         require(ok, "delegatecall failed");
     }
 
+    // slither-disable-next-line incorrect-equality
     function vaultDrained() external view returns (bool) {
         return address(this).balance == 0;
     }
 
     function displayDay() external view returns (uint256) {
+        // slither-disable-next-line weak-prng
         return (block.timestamp / 1 days + 4) % 7;
     }
 }

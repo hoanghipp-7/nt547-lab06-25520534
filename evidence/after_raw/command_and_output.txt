@@ -1,0 +1,38 @@
+COMMAND: slither AuditTarget.sol --config-file config/slither.raw.json --fail-none --json evidence/after_raw/slither.json
+SLITHER_VERSION:
+0.11.6
+
+SOLC_VERSION:
+solc, the solidity compiler commandline interface
+Version: 0.8.24+commit.e11b9ed9.Linux.g++
+
+
+Detector: controlled-delegatecall
+TipJar_0534.plugin(bytes) (AuditTarget.sol#57-60) uses delegatecall to a input-controlled function id
+	- (ok,None) = module.delegatecall(data) (AuditTarget.sol#58)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#controlled-delegatecall
+
+Detector: events-access
+TipJar_0534.updateOwner(address) (AuditTarget.sol#38-41) should emit an event for: 
+	- owner = newOwner (AuditTarget.sol#40) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: low-level-calls
+Low level call in TipJar_0534.ownerWithdraw(uint256) (AuditTarget.sol#33-36):
+	- (ok,None) = address(owner).call{value: amount}() (AuditTarget.sol#34)
+Low level call in TipJar_0534.rescueEth(address) (AuditTarget.sol#43-47):
+	- (ok,None) = to.call{value: address(this).balance}() (AuditTarget.sol#45)
+Low level call in TipJar_0534.redeem() (AuditTarget.sol#49-55):
+	- (ok,None) = msg.sender.call{value: amount}() (AuditTarget.sol#53)
+Low level call in TipJar_0534.plugin(bytes) (AuditTarget.sol#57-60):
+	- (ok,None) = module.delegatecall(data) (AuditTarget.sol#58)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+
+Detector: naming-convention
+Contract TipJar_0534 (AuditTarget.sol#10-71) is not in CapWords
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+AuditTarget.sol analyzed (2 contracts with 102 detectors), 7 result(s) found
+INFO:Slither:evidence/after_raw/slither.json exists already, the overwrite is prevented
+Multiple frameworks detected: solc, Solc-json. Using solc (highest priority). Use --compile-force-framework to override.
+'solc --version' running
+'solc AuditTarget.sol --combined-json abi,ast,bin,bin-runtime,srcmap,srcmap-runtime,userdoc,devdoc,hashes --allow-paths .,/root/Lab06_25520534_baseline/Lab06_SinhVien' running

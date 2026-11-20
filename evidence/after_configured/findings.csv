@@ -1,0 +1,2 @@
+﻿index,check,impact,confidence,file,lines,description
+1,controlled-delegatecall,High,Medium,AuditTarget.sol,"57,58,59,60; 58","TipJar_0534.plugin(bytes) (AuditTarget.sol#57-60) uses delegatecall to a input-controlled function id 	- (ok,None) = module.delegatecall(data) (AuditTarget.sol#58)"
