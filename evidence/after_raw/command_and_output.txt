@@ -27,7 +27,6 @@ Detector: naming-convention
 Contract TipJar_0534 (AuditTarget.sol#10-72) is not in CapWords
 Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
 AuditTarget.sol analyzed (2 contracts with 102 detectors), 6 result(s) found
-INFO:Slither:evidence/after_raw/slither.json exists already, the overwrite is prevented
 Multiple frameworks detected: solc, Solc-json. Using solc (highest priority). Use --compile-force-framework to override.
 'solc --version' running
 'solc AuditTarget.sol --combined-json abi,ast,bin,bin-runtime,srcmap,srcmap-runtime,userdoc,devdoc,hashes --allow-paths .,/root/Lab06_25520534_baseline/Lab06_SinhVien' running
