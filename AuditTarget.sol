@@ -54,6 +54,7 @@ contract TipJar_0534 {
         require(ok, "send failed");
     }
 
+    // slither-disable-next-line controlled-delegatecall
     function plugin(bytes calldata data) external onlyOwner {
         (bool ok, ) = module.delegatecall(data);
         require(ok, "delegatecall failed");

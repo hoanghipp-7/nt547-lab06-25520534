@@ -6,12 +6,7 @@ SOLC_VERSION:
 solc, the solidity compiler commandline interface
 Version: 0.8.24+commit.e11b9ed9.Linux.g++
 
-
-Detector: controlled-delegatecall
-TipJar_0534.plugin(bytes) (AuditTarget.sol#57-60) uses delegatecall to a input-controlled function id
-	- (ok,None) = module.delegatecall(data) (AuditTarget.sol#58)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#controlled-delegatecall
-AuditTarget.sol analyzed (2 contracts with 64 detectors), 1 result(s) found
+AuditTarget.sol analyzed (2 contracts with 64 detectors), 0 result(s) found
 INFO:Slither:evidence/after_configured/slither.json exists already, the overwrite is prevented
 Multiple frameworks detected: solc, Solc-json. Using solc (highest priority). Use --compile-force-framework to override.
 'solc --version' running
