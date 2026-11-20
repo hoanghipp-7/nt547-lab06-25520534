@@ -36,7 +36,7 @@ contract TipJar_0534 {
     }
 
     function updateOwner(address newOwner) external onlyOwner {
-        require(tx.origin == owner, "not owner");
+        require(newOwner != address(0), "zero");
         owner = newOwner;
     }
 
